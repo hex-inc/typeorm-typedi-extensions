@@ -72,7 +72,7 @@ export function InjectRepository(): ParamOrPropDecorator;
  * }
  * ```
  */
-export function InjectRepository(entityType: Function): ParamOrPropDecorator;
+export function InjectRepository(entityTypeFunction: Function): ParamOrPropDecorator;
 /**
  * Allows to inject a custom repository using TypeDI's Container
  * and specify the connection name in a parameter.
@@ -110,9 +110,9 @@ export function InjectRepository(connectionName: string): ParamOrPropDecorator;
  * }
  * ```
  */
-export function InjectRepository(entityType: Function, connectionName: string): ParamOrPropDecorator;
+export function InjectRepository(entityTypeFunction: Function, connectionName: string): ParamOrPropDecorator;
 
-export function InjectRepository(entityTypeOrConnectionName?: Function|string, paramConnectionName = "default"): ParamOrPropDecorator {
+export function InjectRepository(entityTypeFunctionOrConnectionName?: Function|string, paramConnectionName = "default"): ParamOrPropDecorator {
     return (object: object, propertyName: string, index?: number) => {
         let entityType: Function|undefined;
         let connectionName: string;
@@ -120,10 +120,10 @@ export function InjectRepository(entityTypeOrConnectionName?: Function|string, p
 
         // handle first parameter overload
         connectionName = paramConnectionName;
-        if (typeof entityTypeOrConnectionName === "string") {
-            connectionName = entityTypeOrConnectionName;
-        } else if (typeof entityTypeOrConnectionName === "function") {
-            entityType = entityTypeOrConnectionName;
+        if (typeof entityTypeFunctionOrConnectionName === "string") {
+            connectionName = entityTypeFunctionOrConnectionName;
+        } else if (typeof entityTypeFunctionOrConnectionName === "function") {
+            entityType = entityTypeFunctionOrConnectionName();
         }
 
         // if the decorator has been aplied to parameter (constructor injection)
